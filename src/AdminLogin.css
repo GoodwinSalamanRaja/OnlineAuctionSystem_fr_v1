@@ -1,0 +1,15 @@
+.admform{
+    background-image: url("../public/5079724.jpg"); 
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    height: 100vh;
+}
+.admfieldset{
+    background-color: rgba(0,0,0,0.5);
+    border: 1px solid white;
+}
+.absl{
+    top: 13%;
+    right: 4%;
+}

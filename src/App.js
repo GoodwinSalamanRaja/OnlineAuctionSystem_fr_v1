@@ -1,24 +1,25 @@
-
-import logo from './logo.svg';
 import './App.css';
+import {BrowserRouter,Routes,Route} from "react-router-dom";
+import UserLogin from './UserLogin';
+import UserRegister from './UserRegister';
+import HomePage from './HomePage';
+import IndexPage from './IndexPage';
+import AdminLogin from './AdminLogin';
+import AdminIndex from './AdminIndex';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Online Auction System
-        </a>
-      </header>
+    <div>
+       <BrowserRouter>
+         <Routes>
+           <Route path="/" element={<IndexPage />} />
+           <Route path="/Login" element={<UserLogin />} />
+           <Route path="/Register" element={<UserRegister />} />
+           <Route path="/Home" element={<HomePage />} />
+           <Route path="/AdminLogin" element={<AdminLogin />} />
+           <Route path="/AdminIndex" element={<AdminIndex />} />
+         </Routes>
+       </BrowserRouter>
     </div>
   );
 }

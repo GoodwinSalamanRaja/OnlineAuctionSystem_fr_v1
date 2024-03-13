@@ -1,0 +1,16 @@
+.regform{
+    background-image: url("../public/breathtaking-view-beautiful-grassy-fields-mountains-clouds-sky.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+.regfieldset{
+    background-color: rgba(0,0,0,0.5);
+    border: 1px solid white;
+    height: 85%;
+}
+.absl{
+    top: 13%;
+    right: 4%;
+}
