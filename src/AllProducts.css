@@ -1,0 +1,18 @@
+.modalhead{
+    background-image: url("../public/network-connection-background-abstract-style_23-2148875738.png");
+    background-size: cover;
+}
+.modalbtn{
+    background-color: rgba(0,0,0,0.5);
+    border: 1px solid white;
+}
+.absl{
+    top: 13%;
+    right: 4%;
+}
+.proimg{
+    transition: transform 0.4s ease-in;
+}
+.proimg:hover{
+    transform: scale(1.2);
+}

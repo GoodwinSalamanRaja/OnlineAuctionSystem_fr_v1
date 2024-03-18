@@ -6,6 +6,7 @@ import HomePage from './HomePage';
 import IndexPage from './IndexPage';
 import AdminLogin from './AdminLogin';
 import AdminIndex from './AdminIndex';
+import ManageProduct from './ManageProduct';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
            <Route path="/Home" element={<HomePage />} />
            <Route path="/AdminLogin" element={<AdminLogin />} />
            <Route path="/AdminIndex" element={<AdminIndex />} />
+           <Route path="/ManageProduct/:productId" element={<ManageProduct />} />
          </Routes>
        </BrowserRouter>
     </div>

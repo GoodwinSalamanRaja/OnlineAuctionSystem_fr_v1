@@ -9,7 +9,7 @@ function NavBar() {
   return (
     <>
       {['lg',].map((expand) => (
-        <Navbar key={expand} expand={expand} className="bg-dark navbar-dark">
+        <Navbar key={expand} expand={expand} className="bg-dark navbar-dark sticky-top">
           <Container fluid className='mx-0 mx-sm-5'>
             <Navbar.Brand href="#"><h4 className='text-white fw-bold navh'>Online Auction System</h4></Navbar.Brand>
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} className='border border-1'/>
@@ -20,7 +20,7 @@ function NavBar() {
             >
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
-                  Offcanvas
+                  Online Auction System
                 </Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body className='bg-dark'>

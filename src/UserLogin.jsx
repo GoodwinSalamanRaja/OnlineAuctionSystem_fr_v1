@@ -34,7 +34,7 @@ function UserLogin() {
               function success() {
                   console.log("success");
                   alert("Successfully Login!");
-                  navigate("/Home",{state:{data}});
+                  navigate("/Home",{state:data});
               }
           }
           else if (data.password !== resdata.password) {
