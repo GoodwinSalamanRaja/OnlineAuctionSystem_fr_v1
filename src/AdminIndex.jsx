@@ -122,7 +122,7 @@ function AdminIndex() {
                               <span>Categories</span>
                            </li>
                            <li class={`list-group-item border border-1 p-3 btn-outline-primary fs-5 fw-500 d-flex gap-2 ${product ? 'bg-primary' : ''}`} style={{ color: product ? 'white' : '' }} type="button" onClick={productPage}>
-                              <i class="bi bi-card-list"></i>
+                              <i class="bi bi-cart4"></i>
                               <span>Products</span>
                            </li>
                            <li class={`list-group-item border border-1 p-3 btn-outline-primary fs-5 fw-500 d-flex gap-2 ${bid ? 'bg-primary' : ''}`} style={{ color: bid ? 'white' : '' }} type="button" onClick={bidPage}>

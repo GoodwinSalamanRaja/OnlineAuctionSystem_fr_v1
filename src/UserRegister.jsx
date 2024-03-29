@@ -18,7 +18,7 @@ function UserRegister() {
             console.log("username success")
             console.log("password success")
             setError({ ...error, username: "", password: "" })
-            fetch("http://localhost:8080/register/set", { headers: { "Content-Type": "application/json" }, method: "POST", body: JSON.stringify(data) })
+            fetch("http://localhost:8080/user/register", { headers: { "Content-Type": "application/json" }, method: "POST", body: JSON.stringify(data) })
                 .then((response) => {
                     console.log(response)
                     if (response.status === 200) {

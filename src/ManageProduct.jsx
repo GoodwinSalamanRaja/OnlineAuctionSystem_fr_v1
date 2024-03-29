@@ -36,6 +36,9 @@ function ManageProduct() {
             .then((data) => {
                 console.log("update==",data)
                 alert("Product updated successfully!!")
+                window.history.close()
+                window.history.back()
+                window.location.reload();
             })
             .catch((error) => {
                 console.log(error)
@@ -90,6 +93,20 @@ function ManageProduct() {
                         <input type="number" class="form-control form-control-lg" id="inputAddress2" name="regprice" value={productData.regprice} onChange={handleInputChange} />
                     </div>
                     <div class="col-md-6 fs-5 mb-3">
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        
                         <label for="inputCity" class="form-label">Starting Bidding Amount</label>
                         <input type="number" class="form-control form-control-lg" id="inputCity" name="bidprice" value={productData.bidprice} onChange={handleInputChange} />
                     </div>
@@ -112,7 +129,7 @@ function ManageProduct() {
                         </div>
                     </div>
                     <div class="col-12 text-center mt-3">
-                        <input type="submit" value="Insert" class="btn btn-success w-25 fw-bold fs-5 p-2" />
+                        <input type="submit" value="Update" class="btn btn-success w-25 fw-bold fs-5 p-2" />
                     </div>
                 </form>
             </div >

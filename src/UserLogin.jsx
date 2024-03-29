@@ -15,7 +15,7 @@ function UserLogin() {
   function handleSubmit(event) {
     event.preventDefault()
     console.log(data)
-    fetch("http://localhost:8080/register/check", { headers: { "Content-Type": "application/json" }, method: "POST", body: JSON.stringify(data) })
+    fetch("http://localhost:8080/user/login", { headers: { "Content-Type": "application/json" }, method: "POST", body: JSON.stringify(data) })
       .then((response) => {
         console.log("res==", response)
         return response.json()
@@ -34,7 +34,7 @@ function UserLogin() {
               function success() {
                   console.log("success");
                   alert("Successfully Login!");
-                  navigate("/Home",{state:data});
+                  navigate("/Home",{state:resdata});
               }
           }
           else if (data.password !== resdata.password) {

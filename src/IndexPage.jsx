@@ -1,22 +1,23 @@
 import NavBar from "./Navbar.jsx"
-import { useEffect } from 'react';
 import { useState } from 'react';
-import axios from "axios"
 import AllProducts from './AllProducts';
 import Appliances from './Appliances';
 import Computers from './Computers';
 import Laptops from './Laptops';
 import MobilePhones from './MobilePhones';
 import Televisions from './Televisions';
+import { useEffect } from "react";
+import axios from "axios";
 
 function IndexPage(){
-  const [productData, setProductData] = useState([]);
   const [allProductPage, setAllProductPage] = useState(true)
   const [appliancesPage, setAppliancesPage] = useState(false)
   const [computersPage, setComputersPage] = useState(false)
   const [laptopsPage, setLaptopsPage] = useState(false)
   const [mobilePhonesPage, setMobilePhonesPage] = useState(false)
   const [televisionsPage, setTelevisionsPage] = useState(false)
+  const [pageName,setPageName] = useState()
+  const [datas,setDatas] = useState()
   function all() {
     setAppliancesPage(false)
     setComputersPage(false)
@@ -26,6 +27,7 @@ function IndexPage(){
     setAllProductPage(true)
   }
   function appliances() {
+    setPageName("Appliances")
     setAllProductPage(false)
     setComputersPage(false)
     setLaptopsPage(false)
@@ -34,6 +36,7 @@ function IndexPage(){
     setAppliancesPage(true)
   }
   function computers() {
+    setPageName("Desktop Computers")
     setAllProductPage(false)
     setAppliancesPage(false)
     setLaptopsPage(false)
@@ -42,6 +45,7 @@ function IndexPage(){
     setComputersPage(true)
   }
   function laptops() {
+    setPageName("Laptops")
     setAllProductPage(false)
     setAppliancesPage(false)
     setComputersPage(false)
@@ -50,6 +54,7 @@ function IndexPage(){
     setLaptopsPage(true)
   }
   function mobilePhones() {
+    setPageName("Mobile Phone")
     setAllProductPage(false)
     setAppliancesPage(false)
     setComputersPage(false)
@@ -58,6 +63,7 @@ function IndexPage(){
     setMobilePhonesPage(true)
   }
   function televisions() {
+    setPageName("Televisions")
     setAllProductPage(false)
     setAppliancesPage(false)
     setComputersPage(false)
@@ -66,14 +72,15 @@ function IndexPage(){
     setTelevisionsPage(true)
   }
   useEffect(() => {
-    axios.get("http://localhost:8080/product/getAll")
-      .then((response) => {
-        // console.log(response)
-        console.log("response data:", response.data)
-        setProductData(response.data)
-        console.log("=====", productData)
-      })
-  }, [])
+    axios.get(`http://localhost:8080/product/getByName/${pageName}`)
+    .then((response) => {
+      console.log("name===",response.data)
+      setDatas(response.data)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  },[pageName])
    return(
      <div>
        <NavBar />
@@ -95,7 +102,7 @@ function IndexPage(){
             </div>
           </div>
           <div className="col-9" style={{backgroundColor:'rgb(245,245,245)'}}>
-            {allProductPage?<AllProducts productDataSend={productData} />:appliancesPage?<Appliances />:computersPage?<Computers />:laptopsPage?<Laptops />:mobilePhonesPage?<MobilePhones />:televisionsPage?<Televisions />:""}
+            {allProductPage?<AllProducts />:appliancesPage?<Appliances appliancesData={datas} />:computersPage?<Computers computersData={datas}/>:laptopsPage?<Laptops laptopsData={datas}/>:mobilePhonesPage?<MobilePhones mobilePhonesData={datas}/>:televisionsPage?<Televisions televisionsData={datas}/>:""}
           </div>
         </div>
       </div>

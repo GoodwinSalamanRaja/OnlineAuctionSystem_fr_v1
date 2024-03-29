@@ -1,24 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Link } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from 'react-router-dom';
 import './AllProducts.css'
+import axios from 'axios';
 
 
-function AllProducts({ productDataSend },{singleName}) {
+function AllProducts({ singleName }) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const [canvasData, setCanvasData] = useState()
+    function handleShow(nme, cat, des, regp, bidp, biddt, img) {
+        setCanvasData({ ...canvasData, name: nme, category: cat, description: des, regprice: regp, bidprice: bidp, biddate: biddt, image: img })
+        setShow(true);
+        // console.log("can===", canvasData)
+    }
     const [sho, setSho] = useState(false);
     const handleClos = () => setSho(false);
     const handleSho = () => setSho(true);
     const [data, setData] = useState({ username: "", password: "" })
     const [error, setError] = useState({ username: "", password: "" })
     const [showpass, setShowPass] = useState(true)
+    const [page, setPage] = useState(0)
+    const [productData, setProductData] = useState([]);
     const navigate = useNavigate()
-    console.log(singleName,"==========================")
+    console.log(singleName, "==========================")
     function handleChange(event) {
         const { name, value } = event.target
         setData({ ...data, [name]: value })
@@ -26,7 +34,7 @@ function AllProducts({ productDataSend },{singleName}) {
     function handleSubmit(event) {
         event.preventDefault()
         console.log(data)
-        fetch("http://localhost:8080/register/check", { headers: { "Content-Type": "application/json" }, method: "POST", body: JSON.stringify(data) })
+        fetch("http://localhost:8080/user/login", { headers: { "Content-Type": "application/json" }, method: "POST", body: JSON.stringify(data) })
             .then((response) => {
                 console.log("res==", response)
                 return response.json()
@@ -45,7 +53,7 @@ function AllProducts({ productDataSend },{singleName}) {
                         function success() {
                             console.log("success");
                             alert("Successfully Login!");
-                            navigate("/Home", {state:data});
+                            navigate("/Home", { state: resdata });
                         }
                     }
                     else if (data.password !== resdata.password) {
@@ -57,10 +65,20 @@ function AllProducts({ productDataSend },{singleName}) {
                 console.log("Failed to fetch data ", error)
             })
     }
+    useEffect(() => {
+        axios.get(`http://localhost:8080/product/getPage/${page}`)
+            .then((response) => {
+                console.log("page==", response.data)
+                setProductData(response.data)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }, [page])
     return (
         <div className="py-5">
             <div className="row gap-5 justify-content-center">
-                {Array.isArray(productDataSend) && productDataSend.map((datas) => (
+                {Array.isArray(productData) && productData.map((datas) => (
                     <div class="col-5 card shadow" key={datas.id}>
                         <div className="card-header overflow-hidden">
                             <img src={"http://localhost:8080/uploads/" + datas.image} class="card-img-top proimg" width="100%" height="400px" alt="..." />
@@ -71,7 +89,7 @@ function AllProducts({ productDataSend },{singleName}) {
                             <div class="card-text d-flex gap-1"><p className='text-nowrap fw-bold'>Description :</p><span className='fst-italic'>{datas.description}</span></div>
                             <>
                                 <div className="text-center mt-3">
-                                    <Button className='p-2 w-25' variant="primary" onClick={handleShow}>View</Button>
+                                    <Button className='p-2 w-25' variant="primary" onClick={() => handleShow(datas.name, datas.category, datas.description, datas.regprice, datas.bidprice, datas.biddate, datas.image)}>View</Button>
                                     {/* <Button variant="primary" onClick={toggleShow} className="me-2">{name}</Button> */}
                                 </div>
                                 <Offcanvas show={show} onHide={handleClose} backdrop={false} scroll={true} placement='end'>
@@ -79,55 +97,82 @@ function AllProducts({ productDataSend },{singleName}) {
                                         <Offcanvas.Title>View Product</Offcanvas.Title>
                                     </Offcanvas.Header>
                                     <hr className='m-0'></hr>
-                                    <Offcanvas.Body>
-                                        <div>
-                                            <img src={"http://localhost:8080/uploads/" + datas.image} width="100%" />
-                                            <div class="d-flex gap-1 mt-4"><p className='text-nowrap'>Name :</p><span className='fw-bold'>{datas.name}</span></div>
-                                            <div class="d-flex gap-1 mt-3"><p className='text-nowrap'>Category :</p><span className='fw-bold'>{datas.category}</span></div>
-                                            <div class="d-flex gap-1"><p className='text-nowrap'>Regular Price :</p><span className='fw-bold'>{datas.regprice}</span></div>
-                                            <div class="d-flex gap-1"><p className='text-nowrap'>Starting Amount :</p><span className='fw-bold'>{datas.bidprice}</span></div>
-                                            <div class="d-flex gap-1"><p className='text-nowrap'>Until :</p><span className='fw-bold'>{datas.biddate}</span></div>
-                                            <div class="d-flex gap-1"><p className='text-nowrap fw-bold'>Description :</p><span className='fst-italic'>{datas.description}</span></div>
-                                            <div className="text-center mt-4">
-                                                <Button variant="primary" className='w-25 p-2' onClick={handleSho}>
-                                                    Bid
-                                                </Button>
-                                                <Modal show={sho} onHide={handleClos}>
-                                                    <Modal.Header closeButton>
-                                                        <Modal.Title>Online Auction System</Modal.Title>
-                                                    </Modal.Header>
-                                                    <Modal.Body className='p-0 overflow-hidden'>
-                                                        <form className='row justify-content-center align-items-center py-4 py-md-5 modalhead' onSubmit={handleSubmit}>
-                                                            <fieldset className='col-10 col-lg-9 p-5 d-flex flex-column justify-content-center modalbtn'>
-                                                                <h3 className='text-white fw-bold text-center mb-5'>Login</h3>
-                                                                <div class="form-floating">
-                                                                    <input name="username" value={data.username} onChange={handleChange} type="text" class="form-control shadow-lg" id="floatingInput" placeholder="name@example.com" required />
-                                                                    <label for="floatingInput">Username</label>
-                                                                    <p className='text-danger'>{error.username}</p>
-                                                                </div>
-                                                                <div class="form-floating mt-3 position-relative">
-                                                                    <input name="password" value={data.password} onChange={handleChange} type={showpass ? "password" : "text"} class="form-control" id="floatingPassword" placeholder="Password" required />
-                                                                    <label for="floatingPassword">Password</label>
-                                                                    <i class="bi bi-eye-fill position-absolute fs-4 absl" type="button" onClick={() => setShowPass(!showpass)}></i>
-                                                                    <p className='text-danger'>{error.password}</p>
-                                                                </div>
-                                                                <div className='text-center mt-3'>
-                                                                    <input type='submit' value="Login" className='bg-success rounded-pill text-white fw-bold p-2 w-50 border-0' />
-                                                                </div>
-                                                                <Link to="/Register" className='text-center text-decoration-none mt-3'>create a new account?signup</Link>
-                                                            </fieldset>
-                                                        </form>
-                                                    </Modal.Body>
-                                                </Modal>
+                                    {canvasData && (
+                                        <Offcanvas.Body>
+                                            <div>
+                                                <img src={"http://localhost:8080/uploads/" + canvasData.image} width="100%" />
+                                                <div class="d-flex gap-1 mt-4"><p className='text-nowrap'>Name :</p><span className='fw-bold'>{canvasData.name}</span></div>
+                                                <div class="d-flex gap-1"><p className='text-nowrap'>Category :</p><span className='fw-bold'>{canvasData.category}</span></div>
+                                                <div class="d-flex gap-1"><p className='text-nowrap'>Regular Price :</p><span className='fw-bold'>{canvasData.regprice}</span></div>
+                                                <div class="d-flex gap-1"><p className='text-nowrap'>Starting Amount :</p><span className='fw-bold'>{canvasData.bidprice}</span></div>
+                                                <div class="d-flex gap-1"><p className='text-nowrap'>Until :</p><span className='fw-bold'>{canvasData.biddate}</span></div>
+                                                <div class="d-flex gap-1"><p className='text-nowrap fw-bold'>Description :</p><span className='fst-italic'>{canvasData.description}</span></div>
+                                                <div className="text-center mt-4">
+                                                    <Button variant="primary" className='w-25 p-2' onClick={handleSho}>
+                                                        Bid
+                                                    </Button>
+                                                    <Modal show={sho} onHide={handleClos}>
+                                                        <Modal.Header closeButton>
+                                                            <Modal.Title>Online Auction System</Modal.Title>
+                                                        </Modal.Header>
+                                                        <Modal.Body className='p-0 overflow-hidden'>
+                                                            <form className='row justify-content-center align-items-center py-4 py-md-5 modalhead' onSubmit={handleSubmit}>
+                                                                <fieldset className='col-10 col-lg-9 p-5 d-flex flex-column justify-content-center modalbtn'>
+                                                                    <h3 className='text-white fw-bold text-center mb-5'>Login</h3>
+                                                                    <div class="form-floating">
+                                                                        <input name="username" value={data.username} onChange={handleChange} type="text" class="form-control shadow-lg" id="floatingInput" placeholder="name@example.com" required />
+                                                                        <label for="floatingInput">Username</label>
+                                                                        <p className='text-danger'>{error.username}</p>
+                                                                    </div>
+                                                                    <div class="form-floating mt-3 position-relative">
+                                                                        <input name="password" value={data.password} onChange={handleChange} type={showpass ? "password" : "text"} class="form-control" id="floatingPassword" placeholder="Password" required />
+                                                                        <label for="floatingPassword">Password</label>
+                                                                        <i class="bi bi-eye-fill position-absolute fs-4 absl" type="button" onClick={() => setShowPass(!showpass)}></i>
+                                                                        <p className='text-danger'>{error.password}</p>
+                                                                    </div>
+                                                                    <div className='text-center mt-3'>
+                                                                        <input type='submit' value="Login" className='bg-success rounded-pill text-white fw-bold p-2 w-50 border-0' />
+                                                                    </div>
+                                                                    <Link to="/Register" className='text-center text-decoration-none mt-3'>create a new account?signup</Link>
+                                                                </fieldset>
+                                                            </form>
+                                                        </Modal.Body>
+                                                    </Modal>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Offcanvas.Body>
+                                        </Offcanvas.Body>
+                                    )}
                                 </Offcanvas>
                             </>
                         </div>
                     </div>
                 ))}
             </div>
+            <nav aria-label="..." className='mt-5 d-flex justify-content-center'>
+                <ul class="pagination pagination-lg">
+                    <li class="page-item">
+                        <a class={`page-link ${(page === 0) ? "disabled" : ""}`} href='#' onClick={() => setPage(page - 1)}>Previous</a>
+                    </li>
+                    <li class="page-item">
+                        <a class={`page-link ${(page === 0) ? "active" : ""}`} href='#' onClick={() => setPage(0)}>1</a>
+                    </li>
+                    <li class="page-item" aria-current="page">
+                        <a class={`page-link ${(page === 1) ? "active" : ""}`} href='#' onClick={() => setPage(1)}>2</a>
+                    </li>
+                    <li class="page-item">
+                        <a class={`page-link ${(page === 2) ? "active" : ""}`} href='#' onClick={() => setPage(2)}>3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class={`page-link ${(page === 3) ? "active" : ""}`} href='#' onClick={() => setPage(3)}>4</a>
+                    </li>
+                    <li class="page-item">
+                        <a class={`page-link ${(page === 4) ? "active" : ""}`} href='#' onClick={() => setPage(4)}>5</a>
+                    </li>
+                    <li class="page-item">
+                        <a class={`page-link ${(page === 4) ? "disabled" : ""}`} href='#' onClick={() => setPage(page + 1)}>Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     )
 }

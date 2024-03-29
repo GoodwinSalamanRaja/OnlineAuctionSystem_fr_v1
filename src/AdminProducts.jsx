@@ -7,7 +7,9 @@ import { Link } from "react-router-dom";
 function AdminProducts() {
    const [showContent, setShowContent] = useState(true)
    const [productData, setProductData] = useState([])
+   const [size,setSize] = useState(5)
    const [id, setId] = useState()
+   const [productName,setProductName] = useState()
    var count = 1;
    // console.log("id===",id)
    function handleBackButtonClick() {
@@ -18,6 +20,7 @@ function AdminProducts() {
          .then((response) => {
             console.log(response)
             console.log(response.data)
+            alert("Product deleted successfully!!")
             setProductData(productData.filter(product => product.id !== id));
          })
          .catch((error) => {
@@ -25,16 +28,28 @@ function AdminProducts() {
          })
    }
    useEffect(() => {
-      axios.get("http://localhost:8080/product/getAll")
+      console.log("productName===",productName)
+      axios.get(`http://localhost:8080/product/getBySearch/${encodeURIComponent(productName)}`)
+      .then((response) => {
+         console.log("search====",response.data)
+         setProductData(response.data)
+      })
+      .catch((error) => {
+         console.log(error)
+      })
+   },[productName])
+   useEffect(() => {
+      axios.get(`http://localhost:8080/product/getFive/${size}`)
          .then((response) => {
-            // console.log(response)
-            console.log("response data:", response.data)
+            console.log("ten==",response.data)
             setProductData(response.data)
-            console.log("=====", productData)
          })
-   }, [])
+         .catch((error) => {
+            console.log(error)
+         })
+   },[size])
    return (
-      <div className="bg-white" style={{ height: '100%' }}>
+      <div className="bg-white">
          {showContent ? (
             <div className="container-fluid p-0">
                <div className="row py-3 px-4">
@@ -49,23 +64,23 @@ function AdminProducts() {
                <div className="row py-3 px-4">
                   <div className="col d-flex align-items-center gap-1 fs-5">
                      <span>Show</span>
-                     <select class="border-1" style={{ width: '4rem' }} aria-label="Default select example">
-                        <option selected value="0">10</option>
-                        <option value="1">20</option>
-                        <option value="2">30</option>
-                        <option value="3">40</option>
+                     <select class="border-1" style={{ width: '4rem' }} aria-label="Default select example" onChange={(event) => setSize(event.target.value)}>
+                        <option selected value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
                      </select>
                      <span>entries</span>
                   </div>
                   <div className="col d-flex justify-content-end fs-5">
                      <div className="d-flex gap-2 w-50 input-group input-group-sm">
                         <span>Search :</span>
-                        <input type="search" className='form-control border-primary'></input>
+                        <input type="search" className='form-control border-primary' onChange={(event) => {setProductName("%" + event.target.value + "%")}}></input>
                      </div>
                   </div>
                </div>
                <div className="table-responsive p-3">
-                  <table class="table table-hover table-bordered table align-middle">
+                  <table class="table table-hover table-bordered align-middle">
                      <thead>
                         <tr className="border border-2">
                            <th scope="col" className="ps-3">#</th>
