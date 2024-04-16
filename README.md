@@ -1,6 +1,7 @@
 Description:
         1)This is my first project as a full stack developer using Reactjs for frontend
         2)Backend is done with SpringBoot
+        3)This is a project of simple online bidding platform
 
 # Getting Started with Create React App
 
