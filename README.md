@@ -1,3 +1,7 @@
+Description:
+        1)This is my first project as a full stack developer using Reactjs for frontend
+        2)Backend is done with SpringBoot
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
